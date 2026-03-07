@@ -1,0 +1,52 @@
+<div class="game">
+  <header class="header">
+    <h1>Hangman</h1>
+    <p class="subtitle">Guess the word before the stick figure is complete.</p>
+  </header>
+
+  <div class="board" *ngIf="word()">
+    <!-- Gallows + stick figure (6 phases) -->
+    <div class="gallows-wrap">
+      <svg class="gallows" viewBox="0 0 200 300" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
+        <!-- Gallows structure -->
+        <line x1="100" y1="280" x2="100" y2="40" class="pole" />
+        <line x1="100" y1="40" x2="160" y2="40" class="beam" />
+        <line x1="160" y1="40" x2="160" y2="75" class="rope" />
+        <ellipse cx="160" cy="82" rx="8" ry="10" class="noose" />
+
+        <!-- Stick figure: 1 head, 2 body, 3 left arm, 4 right arm, 5 left leg, 6 right leg -->
+        <circle *ngIf="phasesVisible() >= 1" cx="160" cy="95" r="14" class="figure head" />
+        <line *ngIf="phasesVisible() >= 2" x1="160" y1="109" x2="160" y2="165" class="figure body" />
+        <line *ngIf="phasesVisible() >= 3" x1="160" y1="125" x2="135" y2="145" class="figure left-arm" />
+        <line *ngIf="phasesVisible() >= 4" x1="160" y1="125" x2="185" y2="145" class="figure right-arm" />
+        <line *ngIf="phasesVisible() >= 5" x1="160" y1="165" x2="140" y2="210" class="figure left-leg" />
+        <line *ngIf="phasesVisible() >= 6" x1="160" y1="165" x2="180" y2="210" class="figure right-leg" />
+      </svg>
+    </div>
+
+    <div class="word-row">
+      <span *ngFor="let cell of displayWord()" class="letter-cell" [class.visible]="cell.visible">
+        {{ cell.visible ? cell.letter : ' ' }}
+      </span>
+    </div>
+
+    <div class="guessed-section">
+      <p class="guessed-label">Guessed letters</p>
+      <div class="guessed-list">
+        <span *ngFor="let letter of correctGuesses()" class="guessed correct">{{ letter }}</span>
+        <span *ngFor="let letter of wrongGuesses()" class="guessed wrong">{{ letter }}</span>
+      </div>
+    </div>
+
+    <div class="message" *ngIf="status() === 'won'">
+      <strong>You won!</strong> The word was {{ word() }}.
+    </div>
+    <div class="message lost" *ngIf="status() === 'lost'">
+      <strong>Game over.</strong> The word was {{ word() }}.
+    </div>
+
+    <button class="btn" (click)="fetchWord()">New game</button>
+  </div>
+
+  <div class="loading" *ngIf="!word()">Loading word…</div>
+</div>
