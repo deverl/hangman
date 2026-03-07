@@ -118,6 +118,13 @@ export class GameComponent {
     this.status.set('playing');
   }
 
+  onLetterInput(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const letter = input.value.toLowerCase().slice(-1);
+    input.value = '';
+    if (ALPHABET.includes(letter)) this.guess(letter);
+  }
+
   guess(letter: string): void {
     const l = letter.toLowerCase();
     if (!ALPHABET.includes(l)) return;
