@@ -1,8 +1,26 @@
-import { Component, HostListener, OnInit, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, HostListener, signal, computed } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+function seededRandom(seed: number): () => number {
+  return function () {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    const t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    return ((t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ 0) / 4294967296;
+  };
+}
+
+function shuffleWithSeed<T>(arr: T[], seed: number): T[] {
+  const rng = seededRandom(seed);
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 @Component({
   selector: 'app-game',
@@ -11,13 +29,18 @@ const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
 })
-export class GameComponent implements OnInit {
+export class GameComponent {
   private readonly maxWrong = 6;
+
+  private words: string[] = [];
+  private nextIndex = 0;
 
   word = signal<string>('');
   guessed = signal<Set<string>>(new Set());
   wrongCount = signal(0);
   status = signal<'playing' | 'won' | 'lost'>('playing');
+
+  hasWords = signal(false);
 
   displayWord = computed(() => {
     const w = this.word();
@@ -45,16 +68,10 @@ export class GameComponent implements OnInit {
 
   phasesVisible = computed(() => this.wrongCount());
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
-    this.fetchWord();
-  }
-
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'Enter') {
-      this.fetchWord();
+      this.startNewGame();
       return;
     }
     if (this.status() !== 'playing') return;
@@ -62,15 +79,43 @@ export class GameComponent implements OnInit {
     if (ALPHABET.includes(key)) this.guess(key);
   }
 
-  fetchWord(): void {
-    this.word.set('');
+  onFileSelected(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = (reader.result as string) ?? '';
+      const raw = text.split(/\r?\n/).map((w) => w.trim().toLowerCase()).filter((w) => w.length > 0);
+      if (raw.length === 0) {
+        this.hasWords.set(false);
+        this.word.set('');
+        return;
+      }
+      this.words = shuffleWithSeed(raw, Date.now());
+      this.nextIndex = 0;
+      this.hasWords.set(true);
+      this.startNewGame();
+    };
+    reader.readAsText(file);
+    input.value = '';
+  }
+
+  startNewGame(): void {
+    if (!this.hasWords() || this.words.length === 0) return;
+
+    if (this.nextIndex >= this.words.length) {
+      this.words = shuffleWithSeed(this.words, Date.now());
+      this.nextIndex = 0;
+    }
+    const nextWord = this.words[this.nextIndex];
+    this.nextIndex += 1;
+
+    this.word.set(nextWord);
     this.guessed.set(new Set());
     this.wrongCount.set(0);
     this.status.set('playing');
-    this.http.get<{ word: string }>('/api/word').subscribe({
-      next: (res) => this.word.set(res.word.toLowerCase()),
-      error: () => this.word.set('angular'),
-    });
   }
 
   guess(letter: string): void {

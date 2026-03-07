@@ -46,10 +46,7 @@
             "production": { "buildTarget": "hangman:build:production" },
             "development": { "buildTarget": "hangman:build:development" }
           },
-          "defaultConfiguration": "development",
-          "options": {
-            "proxyConfig": "proxy.conf.json"
-          }
+          "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",

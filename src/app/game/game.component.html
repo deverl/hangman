@@ -4,7 +4,15 @@
     <p class="subtitle">Guess the word before the stick figure is complete.</p>
   </header>
 
-  <div class="board" *ngIf="word()">
+  <div class="load-file" *ngIf="!hasWords()">
+    <label class="file-label">
+      <span class="file-label-text">Load word list</span>
+      <input type="file" accept=".txt,text/plain" (change)="onFileSelected($event)" class="file-input" />
+    </label>
+    <p class="file-hint">Choose a text file with one word per line.</p>
+  </div>
+
+  <div class="board" *ngIf="hasWords() && word()">
     <!-- Gallows + stick figure (6 phases) -->
     <div class="gallows-wrap">
       <svg class="gallows" viewBox="0 0 200 300" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
@@ -45,8 +53,6 @@
       <strong>Game over.</strong> The word was {{ word() }}.
     </div>
 
-    <button class="btn" (click)="fetchWord()">New game</button>
+    <button class="btn" (click)="startNewGame()">New game</button>
   </div>
-
-  <div class="loading" *ngIf="!word()">Loading word…</div>
 </div>

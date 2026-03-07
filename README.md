@@ -1,6 +1,6 @@
 # Hangman
 
-A hangman-style word game built with **Node**, **Angular**, and **TypeScript**. Words are loaded from `words.txt`. Wrong guesses build a stick figure on the gallows in 6 steps: head, body, left arm, right arm, left leg, right leg.
+A hangman-style word game built with **Angular** and **TypeScript**. You load a word list from a file; the app shuffles it and steps through one word at a time. Wrong guesses build a stick figure on the gallows in 6 steps: head, body, left arm, right arm, left leg, right leg.
 
 ## Run the game
 
@@ -9,33 +9,24 @@ A hangman-style word game built with **Node**, **Angular**, and **TypeScript**. 
    npm install
    ```
 
-2. Start the API and the Angular app together:
+2. Start the app:
    ```bash
-   npm run dev
-   ```
-   This starts the word API on port 3000 and the Angular app on port 4200 with proxy to the API.
-
-   Or run them separately:
-   ```bash
-   npm run server   # API at http://localhost:3000
-   npm start       # Angular at http://localhost:4200 (proxies /api to 3000)
+   npm start
    ```
 
-3. Open **http://localhost:4200** in your browser.
+3. Open **http://localhost:4200**, then use **Load word list** to choose a text file with one word per line (e.g. the included `words.txt`).
 
 ## How to play
 
-- Guess letters by typing on the keyboard (or use the UI when implemented).
-- Correct letters fill in the word. Wrong letters are listed with a strikethrough and add a part to the stick figure.
+- Load a word list file (one word per line). The first game starts automatically.
+- Guess letters by typing on the keyboard. Correct letters fill in the word; wrong letters are listed with a strikethrough and add a part to the stick figure.
 - You have 6 wrong guesses before the figure is complete and the game is over.
-- Use **New game** to get a new word from `words.txt`.
+- **New game** or **Enter** gives you the next word from the list. After every word is used once, the list is reshuffled and you go through it again.
 
-## Customize words
+## Word list format
 
-Edit `words.txt` in the project root: one word per line. The API serves a random word from this file.
+Use a plain text file with one word per line. Empty lines are ignored; words are treated as lowercase.
 
 ## Tech
 
-- **Frontend**: Angular 19, TypeScript, standalone components
-- **Backend**: Node + Express, reads words from `words.txt`
-- **Proxy**: `proxy.conf.json` forwards `/api` from the dev server to the Node API
+- **Frontend**: Angular 19, TypeScript, standalone components. No backend; words are read from a file you select in the browser.
