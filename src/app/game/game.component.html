@@ -38,21 +38,6 @@
       </span>
     </div>
 
-    <div class="guess-input-wrap" *ngIf="status() === 'playing'">
-      <label for="letter-input" class="visually-hidden">Guess a letter</label>
-      <input
-        id="letter-input"
-        type="text"
-        inputmode="text"
-        autocomplete="off"
-        autocapitalize="off"
-        maxlength="1"
-        placeholder="Type a letter"
-        class="guess-input"
-        (input)="onLetterInput($event)"
-      />
-    </div>
-
     <div class="guessed-section">
       <p class="guessed-label">Guessed letters</p>
       <div class="guessed-list">
