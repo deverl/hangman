@@ -8,28 +8,6 @@
   justify-content: center;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: clamp(1rem, 2vh, 1.5rem);
-}
-
-.header h1 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
-  margin: 0;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--text) 0%, var(--muted) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.subtitle {
-  color: var(--muted);
-  margin: 0.25rem 0 0;
-  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
-}
-
 .load-file {
   display: flex;
   flex-direction: column;
@@ -81,6 +59,24 @@
   max-width: 100%;
 }
 
+.play-area {
+  width: 100%;
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.letters-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2vh, 1.25rem);
+}
+
 .gallows-wrap {
   width: 100%;
   max-width: min(280px, 32vw);
@@ -122,14 +118,14 @@
 
 .letter-cell {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-size: clamp(1.55rem, 3.5vw, 2.35rem);
   font-weight: 600;
-  width: clamp(1.75rem, 3.5vw, 2.25rem);
-  height: clamp(2rem, 4vw, 2.75rem);
+  width: clamp(1.9rem, 4vw, 2.5rem);
+  height: clamp(2.25rem, 4.5vw, 3rem);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 4px solid var(--border);
+  border-bottom: 4px solid rgba(232, 230, 227, 0.55);
   color: var(--muted);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
@@ -145,7 +141,7 @@
 }
 
 .guessed-label {
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-size: clamp(0.95rem, 1.35vw, 1.1rem);
   color: var(--muted);
   margin: 0 0 0.5rem;
 }
@@ -155,12 +151,12 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 1.5rem;
+  min-height: 1.75rem;
 }
 
 .guessed {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: clamp(1.2rem, 1.85vw, 1.45rem);
   font-weight: 600;
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
@@ -215,4 +211,14 @@
 .loading {
   color: var(--muted);
   font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+@media (max-width: 720px) {
+  .play-area {
+    grid-template-columns: 1fr;
+  }
+
+  .gallows-wrap {
+    max-width: min(280px, 70vw);
+  }
 }
